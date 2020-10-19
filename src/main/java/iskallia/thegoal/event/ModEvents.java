@@ -1,5 +1,7 @@
 package iskallia.thegoal.event;
 
+import iskallia.thegoal.command.CommandTheGoalSet;
+import iskallia.thegoal.network.ModNetwork;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -19,7 +21,7 @@ public class ModEvents {
     }
 
     public static void onInitialization(FMLInitializationEvent event) {
-//        InitPacket.registerPackets();
+        ModNetwork.registerPackets();
 //        NetworkRegistry.INSTANCE.registerGuiHandler(Traders.getInstance(), new GuiHandler());
     }
 
@@ -29,8 +31,8 @@ public class ModEvents {
     }
 
     public static void onServerStart(FMLServerStartingEvent event) {
-//        event.registerServerCommand(new CommandITraders());
-//        event.registerServerCommand(new CommandGiveBits());
+        event.registerServerCommand(new CommandTheGoalSet());
+
     }
 
 }

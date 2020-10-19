@@ -1,17 +1,23 @@
 package iskallia.thegoal.world.storage;
 
+import iskallia.thegoal.network.ModNetwork;
+import iskallia.thegoal.network.packet.S2CSyncPlayerTimer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
 public class PlayerSpecificTimer implements INBTSerializable<NBTTagCompound> {
 
-    private UUID playerUUID;
-    private boolean paused;
-    private long lastUpdatedUNIX;
-    private long targetSeconds;
-    private long pendingSeconds;
+    public UUID playerUUID;
+    public boolean paused;
+    public long lastUpdatedUNIX;
+    public long targetSeconds;
+    public long pendingSeconds;
 
     public PlayerSpecificTimer(UUID playerUUID) {
         this.playerUUID = playerUUID;
@@ -43,16 +49,20 @@ public class PlayerSpecificTimer implements INBTSerializable<NBTTagCompound> {
         return true;
     }
 
-    public double getTargetSeconds() {
-        return targetSeconds;
-    }
-
-    public double getPendingSeconds() {
-        return pendingSeconds;
-    }
-
     public boolean isFinished() {
         return pendingSeconds <= 0;
+    }
+
+    @SideOnly(Side.SERVER)
+    public void syncWithPlayer(MinecraftServer server) {
+        EntityPlayerMP player = server.getPlayerList().getPlayerByUUID(this.playerUUID);
+
+        if (player != null) {
+            ModNetwork.CHANNEL.sendTo(
+                    new S2CSyncPlayerTimer(this),
+                    player
+            );
+        }
     }
 
     @Override

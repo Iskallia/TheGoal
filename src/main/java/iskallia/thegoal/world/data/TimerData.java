@@ -4,6 +4,7 @@ import iskallia.thegoal.TheGoal;
 import iskallia.thegoal.world.storage.PlayerSpecificTimer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
@@ -19,33 +20,45 @@ public class TimerData extends WorldSavedData {
 
     private Map<UUID, PlayerSpecificTimer> timersMap = new HashMap<>();
 
-    public PlayerSpecificTimer getTimer(UUID playerUUID) {
-        return timersMap.getOrDefault(playerUUID, new PlayerSpecificTimer(playerUUID));
+    public TimerData() {
+        super(DATA_NAME);
     }
 
-    public void tick(long unix, UUID playerUUID) {
-        if (getTimer(playerUUID).tick(unix)) {
+    public TimerData(String name) {
+        super(name);
+    }
+
+    public PlayerSpecificTimer getTimer(UUID playerUUID) {
+        return timersMap.computeIfAbsent(playerUUID, PlayerSpecificTimer::new);
+    }
+
+    public void tick(MinecraftServer server, long unix, UUID playerUUID) {
+        PlayerSpecificTimer timer = getTimer(playerUUID);
+        if (timer.tick(unix)) {
+            timer.syncWithPlayer(server);
             markDirty();
         }
     }
 
-    public void start(long unix, UUID playerUUID) {
-        getTimer(playerUUID).start(unix);
+    public void start(MinecraftServer server, long unix, UUID playerUUID) {
+        PlayerSpecificTimer timer = getTimer(playerUUID);
+        timer.start(unix);
+        timer.syncWithPlayer(server);
         markDirty();
     }
 
-    public void reset(long targetSeconds, UUID playerUUID) {
-        getTimer(playerUUID).reset(targetSeconds);
+    public void reset(MinecraftServer server, long targetSeconds, UUID playerUUID) {
+        PlayerSpecificTimer timer = getTimer(playerUUID);
+        timer.reset(targetSeconds);
+        timer.syncWithPlayer(server);
         markDirty();
     }
 
-    public void logout(long unix, UUID playerUUID) {
-        getTimer(playerUUID).pause(unix);
+    public void logout(MinecraftServer server, long unix, UUID playerUUID) {
+        PlayerSpecificTimer timer = getTimer(playerUUID);
+        timer.pause(unix);
+        timer.syncWithPlayer(server);
         markDirty();
-    }
-
-    public TimerData() {
-        super(DATA_NAME);
     }
 
     @Override
