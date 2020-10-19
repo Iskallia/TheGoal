@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,6 +18,31 @@ public class TimerData extends WorldSavedData {
     private static final String DATA_NAME = TheGoal.MOD_ID + "_TimerData";
 
     private Map<UUID, PlayerSpecificTimer> timersMap = new HashMap<>();
+
+    public PlayerSpecificTimer getTimer(UUID playerUUID) {
+        return timersMap.getOrDefault(playerUUID, new PlayerSpecificTimer(playerUUID));
+    }
+
+    public void tick(long unix, UUID playerUUID) {
+        if (getTimer(playerUUID).tick(unix)) {
+            markDirty();
+        }
+    }
+
+    public void start(long unix, UUID playerUUID) {
+        getTimer(playerUUID).start(unix);
+        markDirty();
+    }
+
+    public void reset(long targetSeconds, UUID playerUUID) {
+        getTimer(playerUUID).reset(targetSeconds);
+        markDirty();
+    }
+
+    public void logout(long unix, UUID playerUUID) {
+        getTimer(playerUUID).pause(unix);
+        markDirty();
+    }
 
     public TimerData() {
         super(DATA_NAME);
