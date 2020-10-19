@@ -47,6 +47,13 @@ public class TimerData extends WorldSavedData {
         markDirty();
     }
 
+    public void pause(MinecraftServer server, long unix, UUID playerUUID) {
+        PlayerSpecificTimer timer = getTimer(playerUUID);
+        timer.pause(unix);
+        timer.syncWithPlayer(server);
+        markDirty();
+    }
+
     public void reset(MinecraftServer server, long targetSeconds, UUID playerUUID) {
         PlayerSpecificTimer timer = getTimer(playerUUID);
         timer.reset(targetSeconds);
