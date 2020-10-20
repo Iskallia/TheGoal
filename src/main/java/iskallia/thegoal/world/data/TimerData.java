@@ -35,7 +35,6 @@ public class TimerData extends WorldSavedData {
     public void tick(MinecraftServer server, long unix, UUID playerUUID) {
         PlayerSpecificTimer timer = getTimer(playerUUID);
         if (timer.tick(unix)) {
-            timer.syncWithPlayer(server);
             markDirty();
         }
     }
@@ -59,6 +58,11 @@ public class TimerData extends WorldSavedData {
         timer.reset(targetSeconds);
         timer.syncWithPlayer(server);
         markDirty();
+    }
+
+    public void login(MinecraftServer server, long unix, UUID playerUUID) {
+        PlayerSpecificTimer timer = getTimer(playerUUID);
+        timer.syncWithPlayer(server);
     }
 
     public void logout(MinecraftServer server, long unix, UUID playerUUID) {

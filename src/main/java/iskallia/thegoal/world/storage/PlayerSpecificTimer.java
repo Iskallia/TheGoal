@@ -53,7 +53,6 @@ public class PlayerSpecificTimer implements INBTSerializable<NBTTagCompound> {
         return pendingSeconds <= 0;
     }
 
-    @SideOnly(Side.SERVER)
     public void syncWithPlayer(MinecraftServer server) {
         EntityPlayerMP player = server.getPlayerList().getPlayerByUUID(this.playerUUID);
 

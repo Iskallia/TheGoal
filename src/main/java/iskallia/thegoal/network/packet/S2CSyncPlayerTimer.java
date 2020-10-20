@@ -1,9 +1,8 @@
 package iskallia.thegoal.network.packet;
 
 import io.netty.buffer.ByteBuf;
+import iskallia.thegoal.client.gui.overlay.TimerOverlay;
 import iskallia.thegoal.world.storage.PlayerSpecificTimer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -51,11 +50,7 @@ public class S2CSyncPlayerTimer implements IMessage {
 
         @Override
         public IMessage onMessage(S2CSyncPlayerTimer message, MessageContext ctx) {
-            EntityPlayerMP player = ctx.getServerHandler().player;
-            WorldServer world = player.getServerWorld();
-
-            // TODO: Sync HUD
-            System.out.println("Received: " + message.timer.serializeNBT());
+            TimerOverlay.updateTimer(message.timer);
 
             return null;
         }
