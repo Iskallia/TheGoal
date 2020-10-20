@@ -1,6 +1,7 @@
 package iskallia.thegoal;
 
 import iskallia.thegoal.event.ModEvents;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.LogManager;
@@ -16,11 +17,15 @@ public class TheGoal {
         return INSTANCE;
     }
 
-    public static final String MOD_ID = "the_goal";
+    public static final String MOD_ID = "thegoal";
     public static final String MOD_NAME = "The Goal";
     public static final String MOD_VERSION = "${version}";
 
     public static final Logger LOGGER = LogManager.getLogger(TheGoal.MOD_NAME);
+
+    public static ResourceLocation getTexture(String path) {
+        return new ResourceLocation(MOD_ID, "textures/" + path);
+    }
 
     @Mod.EventHandler
     public void onConstruction(FMLConstructionEvent event) {
