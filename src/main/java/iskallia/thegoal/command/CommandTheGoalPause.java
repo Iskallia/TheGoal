@@ -4,11 +4,18 @@ import iskallia.thegoal.world.data.TimerData;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CommandTheGoalPause extends CommandBase {
 
@@ -27,14 +34,25 @@ public class CommandTheGoalPause extends CommandBase {
         long nowUNIX = Instant.now().getEpochSecond();
 
         if (args.length != 1)
-            throw new CommandException("Invalid length of arguments.");
+            throw new WrongUsageException(getUsage(sender));
 
         String nickname = args[0];
 
-        EntityPlayerMP player = getPlayer(server, sender, nickname);
+        for (EntityPlayerMP player : getPlayers(server, sender, nickname)) {
+            World world = sender.getEntityWorld();
+            TimerData.get(world).pause(server, nowUNIX, player.getUniqueID());
+        }
+    }
 
-        World world = sender.getEntityWorld();
-        TimerData.get(world).pause(server, nowUNIX, player.getUniqueID());
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos blockPos) {
+        if (args.length == 1) {
+            LinkedList<String> words = new LinkedList<>(Arrays.asList(server.getOnlinePlayerNames()));
+            words.add("@a");
+            return getListOfStringsMatchingLastWord(args, words);
+        }
+
+        return Collections.emptyList();
     }
 
 }
