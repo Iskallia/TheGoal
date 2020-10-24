@@ -23,8 +23,12 @@ public class TheGoal {
 
     public static final Logger LOGGER = LogManager.getLogger(TheGoal.MOD_NAME);
 
+    public static ResourceLocation getResource(String path) {
+        return new ResourceLocation(MOD_ID, path);
+    }
+
     public static ResourceLocation getTexture(String path) {
-        return new ResourceLocation(MOD_ID, "textures/" + path);
+        return getResource("textures/" + path);
     }
 
     @Mod.EventHandler

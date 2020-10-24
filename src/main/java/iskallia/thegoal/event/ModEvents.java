@@ -3,6 +3,7 @@ package iskallia.thegoal.event;
 import iskallia.thegoal.command.CommandTheGoalPause;
 import iskallia.thegoal.command.CommandTheGoalSet;
 import iskallia.thegoal.command.CommandTheGoalStart;
+import iskallia.thegoal.init.ModModels;
 import iskallia.thegoal.network.ModNetwork;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,7 +19,7 @@ public class ModEvents {
 
         if (event.getSide() == Side.CLIENT) {
 //            InitEntity.registerEntityRenderers();
-//            InitModel.registerTileEntityRenderers();
+            ModModels.registerTESRs();
         }
     }
 

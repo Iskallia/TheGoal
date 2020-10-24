@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "thegoal:item_collector" },
+    "facing=south": { "model": "thegoal:item_collector", "y": 180 },
+    "facing=west":  { "model": "thegoal:item_collector", "y": 270 },
+    "facing=east":  { "model": "thegoal:item_collector", "y": 90 }
+  }
+}
