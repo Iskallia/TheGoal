@@ -1,8 +1,10 @@
 package iskallia.thegoal.event;
 
 import iskallia.thegoal.command.CommandTheGoalPause;
+import iskallia.thegoal.command.CommandTheGoalReloadcfg;
 import iskallia.thegoal.command.CommandTheGoalSet;
 import iskallia.thegoal.command.CommandTheGoalStart;
+import iskallia.thegoal.init.ModConfigs;
 import iskallia.thegoal.init.ModModels;
 import iskallia.thegoal.network.ModNetwork;
 import net.minecraftforge.fml.common.event.*;
@@ -23,14 +25,14 @@ public class ModEvents {
     }
 
     public static void onPostInitialization(FMLPostInitializationEvent event) {
-//        InitConfig.registerConfigs();
-//        InitTieredLoot.registerTiers();
+        ModConfigs.initializeConfigs();
     }
 
     public static void onServerStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandTheGoalSet());
         event.registerServerCommand(new CommandTheGoalStart());
         event.registerServerCommand(new CommandTheGoalPause());
+        event.registerServerCommand(new CommandTheGoalReloadcfg());
     }
 
 }

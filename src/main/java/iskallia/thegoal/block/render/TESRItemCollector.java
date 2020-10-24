@@ -3,12 +3,12 @@ package iskallia.thegoal.block.render;
 import iskallia.thegoal.block.BlockItemCollector;
 import iskallia.thegoal.block.entity.TEItemCollector;
 import iskallia.thegoal.init.ModBlocks;
+import iskallia.thegoal.init.ModConfigs;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
@@ -16,19 +16,24 @@ public class TESRItemCollector extends TileEntitySpecialRenderer<TEItemCollector
 
     @Override
     public void render(TEItemCollector te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        ItemStack itemStack = new ItemStack(Items.DIAMOND);
+        ItemStack itemStack = ModConfigs.CONFIG_ITEM_COLLECTOR.itemParser.generateItemStack(1);
+
+        if (itemStack == null) return;
 
         IBlockState state = te.getWorld().getBlockState(te.getPos());
         if (state.getBlock() != ModBlocks.ITEM_COLLECTOR) return;
         EnumFacing facing = state.getValue(BlockItemCollector.FACING);
 
+        float floatingMax = 0.05f;
         float rotationAnimationAngle = (float) ((System.currentTimeMillis() / 50d) % 360);
-        float yOffset = (float) (Math.sin(System.currentTimeMillis() / 1000d) * 0.05);
+//        float yOffset = (float) (Math.sin(System.currentTimeMillis() / 1000d)) * floatingMax;
 
+        float scale = 1.5f;
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        GlStateManager.translate(0.5f, 0.4f + yOffset, 0.5f);
+        GlStateManager.translate(x, y + ModConfigs.CONFIG_ITEM_COLLECTOR.yOffset, z);
+        GlStateManager.translate(0.5f, 0.5 / scale, 0.5f);
         GlStateManager.rotate(rotationAnimationAngle, 0, 1, 0);
+        GlStateManager.scale(scale, scale, scale);
         Minecraft.getMinecraft().getRenderItem().renderItem(itemStack, ItemCameraTransforms.TransformType.GROUND);
         GlStateManager.popMatrix();
 

@@ -18,7 +18,7 @@ public class TheGoal {
     }
 
     public static final String MOD_ID = "thegoal";
-    public static final String MOD_NAME = "The Goal";
+    public static final String MOD_NAME = "TheGoal";
     public static final String MOD_VERSION = "${version}";
 
     public static final Logger LOGGER = LogManager.getLogger(TheGoal.MOD_NAME);
