@@ -43,6 +43,7 @@ public class TESRItemCollector extends TileEntitySpecialRenderer<TEItemCollector
         Minecraft.getMinecraft().getRenderItem().renderItem(itemStack, ItemCameraTransforms.TransformType.GROUND);
         GlStateManager.popMatrix();
 
+        GlStateManager.disableLighting();
         renderCenteredText(itemStack.getDisplayName(), 15.5f / 16f, x, y, z, facing);
         renderCenteredText(NUMBER_FORMAT.format(collectedAmount), 1.5f / 16f, x, y, z, facing);
 
