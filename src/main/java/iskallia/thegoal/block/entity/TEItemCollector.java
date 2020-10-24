@@ -1,4 +1,9 @@
 package iskallia.thegoal.block.entity;
 
-public class TEItemCollector {
+import net.minecraft.tileentity.TileEntity;
+
+public class TEItemCollector extends TileEntity {
+
+
+
 }

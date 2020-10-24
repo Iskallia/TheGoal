@@ -1,10 +1,13 @@
 package iskallia.thegoal.init;
 
 import iskallia.thegoal.TheGoal;
+import iskallia.thegoal.block.entity.TEItemCollector;
+import iskallia.thegoal.block.render.TESRItemCollector;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class ModModels {
 
@@ -14,7 +17,9 @@ public class ModModels {
         registerBlockModel(ModBlocks.ITEM_COLLECTOR, 0);
     }
 
-    public static void registerTESRs() { }
+    public static void registerTESRs() {
+        ClientRegistry.bindTileEntitySpecialRenderer(TEItemCollector.class, new TESRItemCollector());
+    }
 
     /* ---------------------------------- */
 

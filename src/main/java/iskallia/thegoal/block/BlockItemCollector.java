@@ -1,14 +1,22 @@
 package iskallia.thegoal.block;
 
 import iskallia.thegoal.TheGoal;
+import iskallia.thegoal.block.entity.TEItemCollector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class BlockItemCollector extends Block {
 
@@ -64,10 +72,49 @@ public class BlockItemCollector extends Block {
     /* ---------------------------- */
 
     @Override
+    public boolean hasTileEntity() {
+        return true;
+    }
+
+    @Override
     public boolean hasTileEntity(IBlockState state) {
-        return false;
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TEItemCollector();
     }
 
     /* ---------------------------- */
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+    }
+
+    @Override
+    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+        if (!world.isRemote) {
+            IBlockState north = world.getBlockState(pos.north());
+            IBlockState south = world.getBlockState(pos.south());
+            IBlockState west = world.getBlockState(pos.west());
+            IBlockState east = world.getBlockState(pos.east());
+            EnumFacing facing = state.getValue(FACING);
+
+            if (facing == EnumFacing.NORTH && north.isFullBlock() && !south.isFullBlock()) {
+                facing = EnumFacing.SOUTH;
+            } else if (facing == EnumFacing.SOUTH && south.isFullBlock() && !north.isFullBlock()) {
+                facing = EnumFacing.NORTH;
+            } else if (facing == EnumFacing.WEST && west.isFullBlock() && !east.isFullBlock()) {
+                facing = EnumFacing.EAST;
+            } else if (facing == EnumFacing.EAST && east.isFullBlock() && !west.isFullBlock()) {
+                facing = EnumFacing.WEST;
+            }
+
+            world.setBlockState(pos, state.withProperty(FACING, facing), 2);
+        }
+    }
 
 }

@@ -1,9 +1,12 @@
 package iskallia.thegoal.init;
 
+import iskallia.thegoal.TheGoal;
 import iskallia.thegoal.block.BlockItemCollector;
+import iskallia.thegoal.block.entity.TEItemCollector;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModBlocks {
@@ -15,7 +18,9 @@ public class ModBlocks {
         registerBlock(ITEM_COLLECTOR, registry);
     }
 
-    public static void registerTileEntities() {}
+    public static void registerTileEntities() {
+        GameRegistry.registerTileEntity(TEItemCollector.class, TheGoal.getResource("item_collector"));
+    }
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         registry.register(ITEM_ITEM_COLLECTOR);

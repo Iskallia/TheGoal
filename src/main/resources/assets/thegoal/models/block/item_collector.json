@@ -1,5 +1,6 @@
 {
   "textures": {
+    "particle": "blocks/furnace_top",
     "top": "blocks/furnace_top",
     "front": "thegoal:blocks/item_collector_front",
     "side": "blocks/furnace_side"

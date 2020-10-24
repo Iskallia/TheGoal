@@ -16,6 +16,7 @@ public class RegistryEvents {
     @SubscribeEvent
     public static void onBlockRegister(RegistryEvent.Register<Block> event) {
         ModBlocks.registerBlocks(event.getRegistry());
+        ModBlocks.registerTileEntities();
     }
 
     @SubscribeEvent

@@ -10,22 +10,16 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class ModEvents {
 
-    public static void onConstruction(FMLConstructionEvent event) {
-
-    }
+    public static void onConstruction(FMLConstructionEvent event) { }
 
     public static void onPreInitialization(FMLPreInitializationEvent event) {
-//        InitEntity.registerEntities();
-
         if (event.getSide() == Side.CLIENT) {
-//            InitEntity.registerEntityRenderers();
             ModModels.registerTESRs();
         }
     }
 
     public static void onInitialization(FMLInitializationEvent event) {
         ModNetwork.registerPackets();
-//        NetworkRegistry.INSTANCE.registerGuiHandler(Traders.getInstance(), new GuiHandler());
     }
 
     public static void onPostInitialization(FMLPostInitializationEvent event) {
