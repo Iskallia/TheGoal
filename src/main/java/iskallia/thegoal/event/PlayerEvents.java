@@ -21,6 +21,9 @@ public class PlayerEvents {
 
         CollectorData.get(event.player.world)
                 .syncConfigurations(event.player.getServer(), event.player.getUniqueID());
+
+        CollectorData.get(event.player.world)
+                .notifyPlayer(event.player.getServer(), event.player.getUniqueID());
     }
 
     @SubscribeEvent

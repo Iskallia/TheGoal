@@ -12,7 +12,13 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
+import java.text.DecimalFormat;
+
 public class TESRItemCollector extends TileEntitySpecialRenderer<TEItemCollector> {
+
+    private static DecimalFormat NUMBER_FORMAT = new DecimalFormat("#.##");
+
+    public static int collectedAmount = 0;
 
     @Override
     public void render(TEItemCollector te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
@@ -38,7 +44,7 @@ public class TESRItemCollector extends TileEntitySpecialRenderer<TEItemCollector
         GlStateManager.popMatrix();
 
         renderCenteredText(itemStack.getDisplayName(), 15.5f / 16f, x, y, z, facing);
-        renderCenteredText("123,456,789", 1.5f / 16f, x, y, z, facing);
+        renderCenteredText(NUMBER_FORMAT.format(collectedAmount), 1.5f / 16f, x, y, z, facing);
 
         super.render(te, x, y, z, partialTicks, destroyStage, alpha);
     }

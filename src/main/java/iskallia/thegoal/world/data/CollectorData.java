@@ -3,6 +3,7 @@ package iskallia.thegoal.world.data;
 import iskallia.thegoal.TheGoal;
 import iskallia.thegoal.init.ModConfigs;
 import iskallia.thegoal.network.ModNetwork;
+import iskallia.thegoal.network.packet.S2CCollectedAmount;
 import iskallia.thegoal.network.packet.S2CSyncCollectorConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,20 +31,35 @@ public class CollectorData extends WorldSavedData {
     public void add(int quantity) {
         collectedAmount += quantity;
         markDirty();
+        notifyClients();
     }
 
     public void remove(int quantity) {
         collectedAmount -= quantity;
         markDirty();
+        notifyClients();
     }
 
     public void reset() {
         collectedAmount = 0;
         markDirty();
+        notifyClients();
+    }
+
+    public void notifyPlayer(MinecraftServer server, UUID playerUUID) {
+        EntityPlayerMP player = server.getPlayerList().getPlayerByUUID(playerUUID);
+        if (player != null) {
+            ModNetwork.CHANNEL.sendTo(
+                    new S2CCollectedAmount(collectedAmount),
+                    player
+            );
+        }
     }
 
     public void notifyClients() {
-        // TODO
+        ModNetwork.CHANNEL.sendToAll(
+                new S2CCollectedAmount(collectedAmount)
+        );
     }
 
     public void syncConfigurations(MinecraftServer server, UUID playerUUID) {
@@ -63,10 +79,6 @@ public class CollectorData extends WorldSavedData {
         }
     }
 
-    public int getCollectedAmount() {
-        return collectedAmount;
-    }
-
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("collectedAmount", Constants.NBT.TAG_INT)) {
@@ -82,7 +94,7 @@ public class CollectorData extends WorldSavedData {
 
     public static CollectorData get(World world) {
         CollectorData savedData = (CollectorData) world.getMapStorage()
-                .getOrLoadData(TimerData.class, DATA_NAME);
+                .getOrLoadData(CollectorData.class, DATA_NAME);
 
         if (savedData == null) {
             savedData = new CollectorData();

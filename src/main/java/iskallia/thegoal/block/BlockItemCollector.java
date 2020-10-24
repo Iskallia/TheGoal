@@ -2,6 +2,8 @@ package iskallia.thegoal.block;
 
 import iskallia.thegoal.TheGoal;
 import iskallia.thegoal.block.entity.TEItemCollector;
+import iskallia.thegoal.init.ModConfigs;
+import iskallia.thegoal.world.data.CollectorData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
@@ -9,12 +11,17 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 
@@ -89,6 +96,20 @@ public class BlockItemCollector extends Block {
 
     /* ---------------------------- */
 
+    public boolean isPlayerLookingAtFront(World world, BlockPos blockPos, EntityPlayerMP player) {
+        IBlockState blockState = world.getBlockState(blockPos);
+
+        if (blockState == null) return false;
+
+        RayTraceResult rayResult = ForgeHooks.rayTraceEyes(player, player.interactionManager.getBlockReachDistance() + 1);
+
+        if (rayResult == null) return false;
+
+        EnumFacing facingSide = blockState.getValue(FACING);
+
+        return facingSide == rayResult.sideHit;
+    }
+
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         world.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
@@ -115,6 +136,36 @@ public class BlockItemCollector extends Block {
 
             world.setBlockState(pos, state.withProperty(FACING, facing), 2);
         }
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!world.isRemote && isPlayerLookingAtFront(world, pos, (EntityPlayerMP) player)) {
+            CollectorData collectorData = CollectorData.get(world);
+            ItemStack heldStack = player.getHeldItem(hand);
+
+            if (heldStack.getItem() == ModConfigs.CONFIG_ITEM_COLLECTOR.itemParser.getItem()) {
+                collectorData.add(heldStack.getCount());
+                player.setHeldItem(hand, ItemStack.EMPTY);
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
+        if (!world.isRemote && isPlayerLookingAtFront(world, pos, (EntityPlayerMP) player)) {
+            CollectorData collectorData = CollectorData.get(world);
+            ItemStack heldStack = player.getHeldItemMainhand();
+
+            if (heldStack.getItem() == ModConfigs.CONFIG_ITEM_COLLECTOR.itemParser.getItem()) {
+                collectorData.add(1);
+                heldStack.setCount(heldStack.getCount() - 1);
+            }
+        }
+
+        super.onBlockClicked(world, pos, player);
     }
 
 }

@@ -1,6 +1,7 @@
 package iskallia.thegoal.network;
 
 import iskallia.thegoal.TheGoal;
+import iskallia.thegoal.network.packet.S2CCollectedAmount;
 import iskallia.thegoal.network.packet.S2CSyncCollectorConfig;
 import iskallia.thegoal.network.packet.S2CSyncPlayerTimer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -28,6 +29,13 @@ public class ModNetwork {
         CHANNEL.registerMessage(
                 S2CSyncCollectorConfig.S2CSyncCollectorConfigHandler.class,
                 S2CSyncCollectorConfig.class,
+                nextId(),
+                Side.CLIENT
+        );
+
+        CHANNEL.registerMessage(
+                S2CCollectedAmount.S2CCollectedAmountHandler.class,
+                S2CCollectedAmount.class,
                 nextId(),
                 Side.CLIENT
         );
