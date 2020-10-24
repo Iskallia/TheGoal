@@ -1,5 +1,6 @@
 package iskallia.thegoal.event;
 
+import iskallia.thegoal.block.render.TESRItemCollector;
 import iskallia.thegoal.client.gui.overlay.TimerOverlay;
 import iskallia.thegoal.init.ModConfigs;
 import net.minecraftforge.fml.common.Mod;
@@ -14,6 +15,7 @@ public class ClientEvents {
         ModConfigs.initializeConfigs(); // <-- Reload configs, because they probably are overwritten by the server
 
         TimerOverlay.timer = null;
+        TESRItemCollector.collectedAmount = 0;
     }
 
 }
