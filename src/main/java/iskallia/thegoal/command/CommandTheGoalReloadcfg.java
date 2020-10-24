@@ -1,6 +1,7 @@
 package iskallia.thegoal.command;
 
 import iskallia.thegoal.init.ModConfigs;
+import iskallia.thegoal.world.data.CollectorData;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -21,6 +22,7 @@ public class CommandTheGoalReloadcfg extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         ModConfigs.initializeConfigs();
+        CollectorData.get(sender.getEntityWorld()).syncConfigurations(server, null); // <-- Notify all
     }
 
 }

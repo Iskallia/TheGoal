@@ -18,12 +18,17 @@ public class ItemParser {
 
     public ItemParser(String itemExpression) {
         this.itemExpression = itemExpression;
+        parse();
     }
 
     public void parse() {
         String[] itemTokens = itemExpression.split("\\{", 2);
         this.itemId = itemTokens[0];
         this.itemNbtRaw = itemTokens.length != 2 ? null : "{" + itemTokens[1];
+    }
+
+    public String getItemExpression() {
+        return itemExpression;
     }
 
     public Item getItem() {

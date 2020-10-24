@@ -102,7 +102,8 @@ public class TimerData extends WorldSavedData {
     }
 
     public static TimerData get(World world) {
-        TimerData savedData = (TimerData) world.getMapStorage().getOrLoadData(TimerData.class, DATA_NAME);
+        TimerData savedData = (TimerData) world.getMapStorage()
+                .getOrLoadData(TimerData.class, DATA_NAME);
 
         if (savedData == null) {
             savedData = new TimerData();

@@ -79,9 +79,4 @@ public class TimerOverlay {
         fontRenderer.drawString(text, x, y, textColor);
     }
 
-    @SubscribeEvent
-    public static void onLeavingServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        timer = null;
-    }
-
 }
